@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "author": "Haptic Feedback Controller",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-st-nucleo-c031c6", "id": "nucleo", "top": 0, "left": 0, "attrs": {} },
+    { "type": "wokwi-text", "id": "lbl_name", "top":400, "left": -180, "attrs": { "text": "Student Name (a1234567)" } },
+    { "type": "wokwi-mpu6050", "id": "mpu1", "top": 170, "left": 300, "rotate": 270, "attrs": {  } },
+    { "type": "wokwi-servo", "id": "servo1", "top": 350, "left": 0, "rotate": 90, "attrs": {} },
+    { "type": "wokwi-servo", "id": "servo2", "top": 350, "left": 110, "rotate": 90, "attrs": {} },
+    { "type": "wokwi-servo", "id": "servo3", "top": 350, "left": 220, "rotate": 90, "attrs": {} },
+    { "type": "wokwi-led", "id": "led1", "top": 330, "left": -120, "rotate": 180, "attrs": { "color": "green" } },
+    { "type": "wokwi-led", "id": "led2", "top": 330, "left": -50, "rotate": 180, "attrs": { "color": "yellow" } },
+    { "type": "wokwi-pushbutton", "id": "btn1", "top": 250, "left": -100, "attrs": { "color": "blue", "bounce": "0" } },
+    { "type": "wokwi-text", "id": "text1", "top": 500, "left": 70, "attrs": { "text": "Roll" } },
+    { "type": "wokwi-text", "id": "text2", "top": 500, "left": 178, "attrs": { "text": "Pitch" } },
+    { "type": "wokwi-text", "id": "text3", "top": 500, "left": 288, "attrs": { "text": "Tilt" } },
+    { "type": "wokwi-text", "id": "text4", "top": 345, "left": -180, "attrs": { "text": "Autopilot" } },
+    { "type": "wokwi-text", "id": "text5", "top": 345, "left": -20, "attrs": { "text": "Manual" } },
+    { "type": "wokwi-text", "id": "text6", "top": 230, "left": -150, "attrs": { "text": "Autopilot Btn" } }
+  ],
+  "connections": [
+    ["mpu1:VCC", "nucleo:3V3.1", "red", ["h-20", "v120"]],
+    ["mpu1:GND", "nucleo:GND.1", "black", ["h-30", "v130"]],
+    ["mpu1:SCL", "nucleo:PB8", "orange", ["h-40", "v140"]],
+    ["mpu1:SDA", "nucleo:PB9", "blue", ["h-50", "v150"]],
+    ["servo1:V+", "nucleo:5V.1", "red", ["v-50", "h-120"]],
+    ["servo1:GND", "nucleo:GND.3", "black", ["v-40", "h-110"]],
+    ["servo1:PWM", "nucleo:PB4", "purple", ["v-30", "h-100"]],
+    ["servo2:V+", "nucleo:5V.1", "red", ["v-60", "h-30"]],
+    ["servo2:GND", "nucleo:GND.3", "black", ["v-50", "h-20"]],
+    ["servo2:PWM", "nucleo:PB5", "purple", ["v-40", "h-10"]],
+    ["servo3:V+", "nucleo:5V.1", "red", ["v-70", "h40"]],
+    ["servo3:GND", "nucleo:GND.3", "black", ["v-60", "h50"]],
+    ["servo3:PWM", "nucleo:PB0.1", "purple", ["v-50", "h60"]],
+    ["led1:A", "nucleo:PA2", "green", ["v-30", "h-30"]],
+    ["led1:C", "nucleo:GND.1", "black", ["v-40", "h-40"]],
+    ["led2:A", "nucleo:PB11", "yellow", ["v-30", "h-40"]],
+    ["led2:C", "nucleo:GND.1", "black", ["v-50", "h-60"]],
+    ["btn1:1.r", "nucleo:3V3.1", "red", ["v-80", "h-100"]],
+    ["btn1:2.r", "nucleo:PA12", "blue", ["v-70", "h-90"]]
+  ]
+}

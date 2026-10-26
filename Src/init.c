@@ -19,12 +19,11 @@ static void initialise_clocks() {
 
 // Configure inputs: PA2 New Item, PA10 Step Gate, PB5 E-Stop (all pull down)
 static void initialise_inputs() {
-    init_pin(GPIOB, 8, MODE_ALT, PULL_UP);
+    init_pin(GPIOB, 8, MODE_ALT, PULL_UP); // I2C1 SCL
     init_pin_af(GPIOB, 8, 6);
-    init_pin(GPIOB, 9, MODE_ALT, PULL_UP);
+    init_pin(GPIOB, 9, MODE_ALT, PULL_UP); // I2C1 SDA
     init_pin_af(GPIOB, 9, 6);
-    GPIOB->OTYPER |= (1 << 8) | (1 << 9); 
-    
+    GPIOB->OTYPER |= (1 << 8) | (1 << 9);  // I2C needs open-drain
     init_pin(GPIOA, 12, MODE_INPUT, PULL_DOWN);
     // init_pin(GPIOA, 2, MODE_INPUT, PULL_DOWN); // New Item PA2
     // init_pin(GPIOA, 10, MODE_INPUT, PULL_DOWN); // Step Gate PA10
@@ -78,22 +77,24 @@ static void initialise_timer() {
 
 
 // clock uses PB8 for clock
-static int initialise_i2c() {
+static bool initialise_i2c() {
     // Initialise I2C1 (f_scl = 100 kHz, f_i2c = 4 MHz)
     i2c_master_init(I2C1,11,19,19); 
-    return i2c_master_writereg(I2C1, MPU1_ADDR, REG_PWR_MGMT_1, 0x00); // wake MPU6050
+    return i2c_master_writereg(I2C1, MPU1_ADDR, REG_PWR_MGMT_1, 0x00);
 }
 
-volatile int i2c_init_error = -1; // 0 = OK, else I2C_ERR_* code (watch this in the debugger)
-
 // Initialisation block of the main flow chart
-int initialise_registers() {
+void initialise_registers() {
     initialise_clocks();
     initialise_inputs();
     initialise_pwm();
     initialise_outputs();
     initialise_timer();
     initialise_interrupts();
-    i2c_init_error = initialise_i2c();
-    return i2c_init_error;
+    if (initialise_i2c()) {
+        pin_write(GPIOB, 11, PIN_LOW);
+        pin_write(GPIOA, 2, PIN_HIGH);
+    }
+
+    // initialise_i2c();
 }

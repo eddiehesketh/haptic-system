@@ -9,5 +9,4 @@
 #include "i2c.h"
 
 // Initialisation block of the main flow chart (clocks, GPIO, PWM, TIM3, NVIC)
-// Returns 0 if the MPU6050 woke up, else an I2C_ERR_* code
-int initialise_registers();
+void initialise_registers();

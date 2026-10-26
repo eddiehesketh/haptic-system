@@ -1,5 +1,5 @@
 [wokwi]
 version = 1
 gdbServerPort = 3333
-firmware = 'build/Debug/haptic-system.hex'
-elf = 'build/Debug/haptic-system.elf'
+firmware = 'build/Release/haptic-system.hex'
+elf = 'build/Release/haptic-system.elf'

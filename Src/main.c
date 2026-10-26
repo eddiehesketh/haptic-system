@@ -22,10 +22,6 @@
 #include "stm32c031xx.h"
 #include "init.h"
 
-
-#define MPU1_ADDR 0x68
-#define REG_PWR_MGMT_1 0x6B
-
 #define SERVO_90_DEG (uint16_t)1500 // 1.5 ms = ~90 degrees
 
 volatile uint16_t roll_servo_pos = SERVO_90_DEG; // TIM3 CH2 pulse, microseconds
@@ -33,37 +29,17 @@ volatile uint16_t pitch_servo_pos = SERVO_90_DEG;
 volatile uint16_t tilt_servo_pos = SERVO_90_DEG;
 
 
-volatile uint8_t who_am_i = 0; // value read from MPU6050 WHO_AM_I (expect 0x68)
-
 int main(void)
 {
     // init_pin(GPIOA, 12, MODE_INPUT, PULL_DOWN); // New Item PA2
     // init_pin(GPIOA, 2, MODE_OUTPUT, NONE); // New Item PA2
 
     // enable_interrupt(A, BOTH, 12); // Step Gate PA10 -> EXTI4_15_IRQn
-    int err = initialise_registers();
+    initialise_registers();
 
-    if (err == I2C_OK) {
-        pin_write(GPIOA, 2, PIN_HIGH); // green on: MPU6050 wake-up write worked
 
-        // Confirm the sensor by reading WHO_AM_I (0x75), which should be 0x68
-        if (i2c_master_readregs(I2C1, MPU1_ADDR, 0x75, (uint8_t *)&who_am_i, 1) && who_am_i == 0x68) {
-            pin_write(GPIOB, 11, PIN_HIGH); // yellow on too: read path works
-            for (;;);
-        }
-        err = I2C_ERR_WHO_AM_I;
-    }
-
-    // I2C failed: blink the yellow LED (PB11) err times, pause, repeat
-    for (;;) {
-        for (int i = 0; i < err; i++) {
-            pin_write(GPIOB, 11, PIN_HIGH);
-            delay_ms(200);
-            pin_write(GPIOB, 11, PIN_LOW);
-            delay_ms(200);
-        }
-        delay_ms(1500);
-    }
+    /* Loop forever */
+	for(;;);
 }
 
 void EXTI4_15_IRQHandler() {

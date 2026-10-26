@@ -39,14 +39,19 @@ int main(void)
 
     // enable_interrupt(A, BOTH, 12); // Step Gate PA10 -> EXTI4_15_IRQn
     initialise_registers();
-
-
     /* Loop forever */
     for (;;) {
         // TIM3 sets read_imu every 20 ms; do the (blocking) I2C read here, not in the ISR
         while (!read_imu);
         read_imu = false;
-        read_mpu(); // updates roll, pitch, tilt (resets I2C itself on failure)
+
+        if (read_mpu()) {
+            float pitch_deg = pitch * (180.0f / 3.14159265f);   // radians -> degrees
+
+            // Yellow (PB11) on when pitched up past +30 deg, green (PA2) on when past -30 deg
+            pin_write(GPIOB, 11, (pitch_deg >  30.0f) ? PIN_HIGH : PIN_LOW);
+            pin_write(GPIOA,  2, (pitch_deg < -30.0f) ? PIN_HIGH : PIN_LOW);
+        }
     }
 }
 

@@ -15,11 +15,11 @@ float calculate_roll(int16_t a_y, int16_t a_z) {
 }
 
 float calculate_pitch(int16_t a_x, int16_t a_y, int16_t a_z) {
-    return atan2f((float)(-a_x), sqrt((float)a_y * a_y + (float)a_z * a_z));
+    return atan2f((float)(-a_x), sqrtf((float)a_y * a_y + (float)a_z * a_z));
 }
 
 float calculate_tilt(float roll, float pitch) {
-    return sqrt(pow(roll, 2) + pow(pitch, 2));
+    return sqrtf(roll * roll + pitch * pitch);
 }
 
 bool read_mpu() {

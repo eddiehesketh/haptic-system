@@ -85,8 +85,8 @@ static void initialise_timer() {
 static bool initialise_i2c() {
     // Initialise I2C1 (f_scl = 100 kHz, f_i2c = 4 MHz)
     i2c_master_init(I2C1,11,19,19); 
-    i2c_master_writereg(I2C1, MPU1_ADDR, REG_PWR_MGMT_1, 0x00);
-    return i2c_master_writereg(I2C1, MPU1_ADDR, ACCEL_CONFIG_ADDR, ACCEL_CONFIG);
+    bool ok = i2c_master_writereg(I2C1, MPU1_ADDR, REG_PWR_MGMT_1, 0x00);          // wake MPU6050
+    return ok && i2c_master_writereg(I2C1, MPU1_ADDR, ACCEL_CONFIG_ADDR, ACCEL_CONFIG); // +-16 g
 }
 
 // Initialisation block of the main flow chart

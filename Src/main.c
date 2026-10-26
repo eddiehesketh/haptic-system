@@ -21,18 +21,15 @@
 #include "interrupt.h"
 #include "stm32c031xx.h"
 #include "init.h"
+#include "angles.h"
 
 #define SERVO_90_DEG (uint16_t)1500 // 1.5 ms = ~90 degrees
-#define ACCEL_CONFIG (uint8_t)(0x1B)
-#define MPU1_ADDR (uint8_t)(0x68)
-#define ACCEL_BYTE_SIZE 6
-#define ACCEL_ADDRESS (uint8_t)(0x3B)
-#define ACCEL_CONFIG (uint8_t)(0x18)
-#define NO_BYTES 6
 
 volatile uint16_t roll_servo_pos = SERVO_90_DEG; // TIM3 CH2 pulse, microseconds
 volatile uint16_t pitch_servo_pos = SERVO_90_DEG;
 volatile uint16_t tilt_servo_pos = SERVO_90_DEG;
+
+volatile bool read_imu = false; // set by TIM3_IRQHandler at 50 Hz
 
 
 int main(void)
@@ -45,7 +42,12 @@ int main(void)
 
 
     /* Loop forever */
-	for(;;);
+    for (;;) {
+        // TIM3 sets read_imu every 20 ms; do the (blocking) I2C read here, not in the ISR
+        while (!read_imu);
+        read_imu = false;
+        read_mpu(); // updates roll, pitch, tilt (resets I2C itself on failure)
+    }
 }
 
 void EXTI4_15_IRQHandler() {
@@ -66,6 +68,7 @@ void EXTI4_15_IRQHandler() {
 void TIM3_IRQHandler() {
     if (TIM3->SR & (1 << 0)) { // TIM3 SR UIF bit 0 set?
         TIM3->SR &= ~(1 << 0); // clear UIF
+        read_imu = true;       // tell the main loop to read the MPU6050
         TIM3->CCR1 = roll_servo_pos;
         TIM3->CCR2 = pitch_servo_pos; // apply gate 1: CCR2 = servo_1_pos
         TIM3->CCR3 = tilt_servo_pos; // apply gate 2: CCR3 = servo_2_pos

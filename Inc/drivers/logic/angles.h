@@ -1,3 +1,5 @@
+#pragma once
+
 #include <math.h>
 #include "stm32c031xx.h"
 #include "convert.h"
@@ -6,17 +8,17 @@
 #include "i2c.h"
 
 // typedef struct {
-//     double roll;
-//     double pitch;
-//     double tilt;
+//     float roll;
+//     float pitch;
+//     float tilt;
 // } haptic_data;
 
-extern double roll;
-extern double pitch;
-extern double tilt;
+extern float roll;
+extern float pitch;
+extern float tilt;
 
-double calculate_roll(int16_t a_y, int16_t a_z);
-double calculate_pitch(int16_t a_x, int16_t a_y, int16_t a_z);
-double calculate_tilt(double roll, double pitch);
+float calculate_roll(int16_t a_y, int16_t a_z);
+float calculate_pitch(int16_t a_x, int16_t a_y, int16_t a_z);
+float calculate_tilt(float roll, float pitch);
 bool read_mpu();
 

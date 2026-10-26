@@ -1,4 +1,5 @@
 [wokwi]
 version = 1
+gdbServerPort = 3333
 firmware = 'build/Release/haptic-system.hex'
 elf = 'build/Release/haptic-system.elf'

@@ -22,6 +22,10 @@
 #include "stm32c031xx.h"
 #include "init.h"
 
+
+#define MPU1_ADDR 0x68
+#define REG_PWR_MGMT_1 0x6B
+
 #define SERVO_90_DEG (uint16_t)1500 // 1.5 ms = ~90 degrees
 
 volatile uint16_t roll_servo_pos = SERVO_90_DEG; // TIM3 CH2 pulse, microseconds
@@ -39,7 +43,9 @@ int main(void)
 
 
     /* Loop forever */
-	for(;;);
+	while (1) {
+        i2c_master_writereg(I2C1, MPU1_ADDR, REG_PWR_MGMT_1, 0x00);
+    }
 }
 
 void EXTI4_15_IRQHandler() {

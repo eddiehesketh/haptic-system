@@ -19,10 +19,12 @@ static void initialise_clocks() {
 
 // Configure inputs: PA2 New Item, PA10 Step Gate, PB5 E-Stop (all pull down)
 static void initialise_inputs() {
-    init_pin(GPIOB, 8, MODE_ALT, NONE);
+    init_pin(GPIOB, 8, MODE_ALT, PULL_UP);
     init_pin_af(GPIOB, 8, 6);
-    init_pin(GPIOB, 9, MODE_ALT, NONE);
+    init_pin(GPIOB, 9, MODE_ALT, PULL_UP);
     init_pin_af(GPIOB, 9, 6);
+    GPIOB->OTYPER |= (1 << 8) | (1 << 9); 
+    
     init_pin(GPIOA, 12, MODE_INPUT, PULL_DOWN);
     // init_pin(GPIOA, 2, MODE_INPUT, PULL_DOWN); // New Item PA2
     // init_pin(GPIOA, 10, MODE_INPUT, PULL_DOWN); // Step Gate PA10

@@ -23,6 +23,12 @@
 #include "init.h"
 
 #define SERVO_90_DEG (uint16_t)1500 // 1.5 ms = ~90 degrees
+#define ACCEL_CONFIG (uint8_t)(0x1B)
+#define MPU1_ADDR (uint8_t)(0x68)
+#define ACCEL_BYTE_SIZE 6
+#define ACCEL_ADDRESS (uint8_t)(0x3B)
+#define ACCEL_CONFIG (uint8_t)(0x18)
+#define NO_BYTES 6
 
 volatile uint16_t roll_servo_pos = SERVO_90_DEG; // TIM3 CH2 pulse, microseconds
 volatile uint16_t pitch_servo_pos = SERVO_90_DEG;

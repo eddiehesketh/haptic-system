@@ -1,5 +1,6 @@
 #include "init.h"
 #include "gpio.h"
+#include "i2c.h"
 #include "interrupt.h"
 #include "pwm.h"
 #include "stm32c031xx.h"
@@ -8,6 +9,10 @@
 #define SERVO_90_DEG (uint16_t)1500 // 1.5 ms = ~90 degrees
 #define MPU1_ADDR 0x68
 #define REG_PWR_MGMT_1 0x6B
+#define ACCEL_CONFIG_ADDR (uint8_t)(0x1C)
+#define ACCEL_CONFIG (uint8_t)(0x18)
+
+
 
 // Enable GPIO clocks: A, B, C
 static void initialise_clocks() {
@@ -80,7 +85,8 @@ static void initialise_timer() {
 static bool initialise_i2c() {
     // Initialise I2C1 (f_scl = 100 kHz, f_i2c = 4 MHz)
     i2c_master_init(I2C1,11,19,19); 
-    return i2c_master_writereg(I2C1, MPU1_ADDR, REG_PWR_MGMT_1, 0x00);
+    i2c_master_writereg(I2C1, MPU1_ADDR, REG_PWR_MGMT_1, 0x00);
+    return i2c_master_writereg(I2C1, MPU1_ADDR, ACCEL_CONFIG_ADDR, ACCEL_CONFIG);
 }
 
 // Initialisation block of the main flow chart

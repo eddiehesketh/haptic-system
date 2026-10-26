@@ -20,8 +20,9 @@ bool check_timeout(uint16_t start_tick, uint16_t timeout_ms) {
 }
 
 bool i2c_master_readregs(I2C_TypeDef *i2c, uint8_t dev_addr, uint8_t reg_addr, uint8_t *rx_buf, uint16_t size) {
+    uint16_t start_tick;
     const uint16_t timeout_ms = 10;
-    uint16_t start_tick = (uint16_t)TIM16->CNT;
+    start_tick = (uint16_t)TIM16->CNT;
 
     while (i2c->ISR & (1 << 15)) {
         if (check_timeout(start_tick, timeout_ms)) return false;
@@ -74,10 +75,10 @@ bool i2c_master_readregs(I2C_TypeDef *i2c, uint8_t dev_addr, uint8_t reg_addr, u
 }
 
 bool i2c_master_writereg(I2C_TypeDef *i2c, uint8_t dev_addr, uint8_t reg_addr, uint8_t data) {
-
+    uint16_t start_tick;
     const uint16_t timeout_ms = 10;
     // Wait for i2c bus free
-    uint16_t start_tick = (uint16_t)TIM16->CNT; // use current counter value as start time (1 tick = 1ms)
+    start_tick = (uint16_t)TIM16->CNT; // use current counter value as start time (1 tick = 1ms)
 
     while (i2c->ISR & (1<<15)) {
     // Check Busy flag. If timeout > 10 ms; bus is busy. Exit

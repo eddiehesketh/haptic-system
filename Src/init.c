@@ -3,6 +3,7 @@
 #include "interrupt.h"
 #include "pwm.h"
 #include "stm32c031xx.h"
+#include "timer.h"
 
 #define SERVO_90_DEG (uint16_t)1500 // 1.5 ms = ~90 degrees
 #define MPU1_ADDR 0x68
@@ -70,14 +71,15 @@ static void initialise_interrupts() {
 // Configure timer: TIM3 PSC=47 ARR=19999 (50 Hz). Also enables TIM3_IRQn
 static void initialise_timer() {
     enable_timer(TIM3, 19999, 47);
+    enable_timer_no_interrupt(TIM16, 0xFFFF, 47999);
 }
 
 
 // clock uses PB8 for clock
-static void initialise_i2c() {
+static bool initialise_i2c() {
     // Initialise I2C1 (f_scl = 100 kHz, f_i2c = 4 MHz)
     i2c_master_init(I2C1,11,19,19); 
-    i2c_master_writereg(I2C1, MPU1_ADDR, REG_PWR_MGMT_1, 0x00);
+    return i2c_master_writereg(I2C1, MPU1_ADDR, REG_PWR_MGMT_1, 0x00);
 }
 
 // Initialisation block of the main flow chart
@@ -88,7 +90,10 @@ void initialise_registers() {
     initialise_outputs();
     initialise_timer();
     initialise_interrupts();
+    if (initialise_i2c()) {
+        pin_write(GPIOB, 11, PIN_LOW);
+        pin_write(GPIOA, 2, PIN_HIGH);
+    }
+
     // initialise_i2c();
-    pin_write(GPIOB, 11, PIN_LOW);
-    pin_write(GPIOA, 2, PIN_HIGH);
 }

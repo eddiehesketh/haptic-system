@@ -28,6 +28,26 @@ static IRQn_Type enable_rcc_and_get_type(TIM_TypeDef * tim) {
     }
 }
 
+// Enable this timer's APB clock and return its NVIC IRQ number
+static void enable_rcc(TIM_TypeDef * tim) {
+    if (tim == TIM1) {
+        RCC->APBENR2 &= ~(RCC_APBENR2_TIM1EN_Msk);
+        RCC->APBENR2 |= (RCC_APBENR2_TIM1EN); // RCC_APBENR2 TIM1EN
+    } else if (tim == TIM3) {
+        RCC->APBENR1 &= ~(RCC_APBENR1_TIM3EN_Msk);
+        RCC->APBENR1 |= (RCC_APBENR1_TIM3EN); // RCC_APBENR1 TIM3EN
+    } else if (tim == TIM14) {
+        RCC->APBENR2 &= ~(RCC_APBENR2_TIM14EN_Msk);
+        RCC->APBENR2 |= (RCC_APBENR2_TIM14EN); // RCC_APBENR2 TIM14EN
+    } else if (tim == TIM16) {
+        RCC->APBENR2 &= ~(RCC_APBENR2_TIM16EN_Msk);
+        RCC->APBENR2 |= (RCC_APBENR2_TIM16EN); // RCC_APBENR2 TIM16EN
+    } else if (tim == TIM17) {
+        RCC->APBENR2 &= ~(RCC_APBENR2_TIM17EN_Msk);
+        RCC->APBENR2 |= (RCC_APBENR2_TIM17EN); // RCC_APBENR2 TIM17EN
+    }
+}
+
 // Clock the timer, set PSC/ARR, enable update IRQ, then start the counter.
 // Caller must provide TIMx_IRQHandler. NVIC priority left at reset (0).
 void enable_timer(TIM_TypeDef * tim, uint16_t arr, uint16_t psc) {
@@ -40,4 +60,14 @@ void enable_timer(TIM_TypeDef * tim, uint16_t arr, uint16_t psc) {
     NVIC_EnableIRQ(nvic_type);
 
     tim->CR1 |= (1 << 0); // start counter
+}
+
+void enable_timer_no_interrupt(TIM_TypeDef * tim, uint16_t arr, uint16_t psc) {
+    enable_rcc(tim);
+
+    tim->PSC = psc;
+    tim->ARR = arr;
+    tim->EGR = 1 << 0;  // UG: copy PSC into the active prescaler, clear CNT
+    tim->SR = 0;        // UG also sets UIF
+    tim->CR1 |= 1 << 0;
 }

@@ -22,19 +22,35 @@
 #include "stm32c031xx.h"
 #include "init.h"
 #include "angles.h"
+#include "fsm.h"
 
 // Servo position macros - Initialisation block of the main flow chart
 #define SERVO_45_DEG_ACW (uint16_t)1000 // 1.0 ms, ~45 degrees
 #define SERVO_90_DEG (uint16_t)1500 // 1.5 ms, ~90 degrees
 #define SERVO_45_DEG_CW (uint16_t)2000 // 2.0 ms, ~135 degrees
-#define SERVO_0_DEG (uint16_t)0 // 2.0 ms, ~135 degrees
+#define SERVO_0_DEG (uint16_t)500 // 0.5 ms, ~0 degrees
 
 
 volatile uint16_t roll_servo_pos = SERVO_90_DEG; // TIM3 CH2 pulse, microseconds
 volatile uint16_t pitch_servo_pos = SERVO_90_DEG;
 volatile uint16_t tilt_servo_pos = SERVO_0_DEG;
 
-volatile bool read_imu = false; // set by TIM3_IRQHandler at 50 Hz
+volatile bool read_imu = false;       // set by TIM3_IRQHandler at 50 Hz
+volatile bool button_pressed = false; // set by EXTI4_15_IRQHandler on the autopilot button
+
+// One FSM instance per axis (same code, different parameters)
+static axis_data roll_axis = {
+    .state = ZONE_FREE, .enter_compliant = 30, .enter_clamped = 50,
+    .neutral_deg = 90, .gain = 1, .clamp_deg = 50,
+};
+static axis_data pitch_axis = {
+    .state = ZONE_FREE, .enter_compliant = 30, .enter_clamped = 50,
+    .neutral_deg = 90, .gain = 1, .clamp_deg = 50,
+};
+static axis_data tilt_axis = {
+    .state = ZONE_FREE, .enter_compliant = 20, .enter_clamped = 70,
+    .neutral_deg = 0, .gain = 2, .clamp_deg = 140,   // servo angle = 2 x tilt, clamp at 140
+};
 
 
 int main(void)
@@ -44,6 +60,8 @@ int main(void)
 
     // enable_interrupt(A, BOTH, 12); // Step Gate PA10 -> EXTI4_15_IRQn
     initialise_registers();
+    mode_state mode = MODE_AUTOPILOT;
+
     /* Loop forever */
     for (;;) {
         // TIM3 sets read_imu every 20 ms; do the (blocking) I2C read here, not in the ISR
@@ -51,20 +69,22 @@ int main(void)
         read_imu = false;
 
         if (read_mpu()) {
-            float pitch_deg = pitch * (180.0f / 3.14159265f);   // radians -> degrees
-
-            // Yellow (PB11) on when pitched up past +30 deg, green (PA2) on when past -30 deg
-            pin_write(GPIOB, 11, (pitch_deg >  30.0f) ? PIN_HIGH : PIN_LOW);
-            pin_write(GPIOA,  2, (pitch_deg < -30.0f) ? PIN_HIGH : PIN_LOW);
+            axis_fsm_update(&roll_axis,  &roll_servo_pos,  roll);
+            axis_fsm_update(&pitch_axis, &pitch_servo_pos, pitch);
+            axis_fsm_update(&tilt_axis,  &tilt_servo_pos,  tilt);
         }
+
+        // Consume the button press (if any) and run the autopilot/manual FSM
+        bool pressed = button_pressed;
+        button_pressed = false;
+        mode = mode_fsm_update(mode, &roll_axis, &pitch_axis, pressed);
     }
 }
 
 void EXTI4_15_IRQHandler() {
     if (EXTI->RPR1 & (1 << 12)) {
-        EXTI->RPR1 |= (1 << 12); // Clear RPR1 bit 5 (write 1)
-        toggle_output(GPIOA, 2);
-        toggle_output(GPIOB, 11);
+        EXTI->RPR1 = (1 << 12); // write 1 to clear the PA12 rising-edge pending bit
+        button_pressed = true;  // handled by the mode FSM in the main loop
     }
 
     // else: not PB5 or PA10, return

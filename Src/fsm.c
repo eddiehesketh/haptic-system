@@ -6,9 +6,6 @@
 #define SERVO_US_AT_0_DEG   500.0f
 #define SERVO_US_PER_DEG    (2000.0f / 180.0f)
 
-// +1 or -1. The brief defines clockwise as negative: if a positive angle turns the
-// servo clockwise in Wokwi, change this to -1.0f.
-#define SERVO_DIRECTION     1.0f
 
 static uint16_t servo_deg_to_us(float deg) {
     if (deg < 0.0f)   deg = 0.0f;
@@ -46,7 +43,7 @@ void axis_fsm_update(axis_data *axis, volatile uint16_t *position, float angle_d
         default:             offset = 0.0f;                                                  break;
     }
 
-    *position = servo_deg_to_us(axis->neutral_deg + SERVO_DIRECTION * offset);
+    *position = servo_deg_to_us(axis->neutral_deg + axis->direction * offset);
 }
 
 mode_state mode_fsm_update(mode_state mode, const axis_data *roll_axis,

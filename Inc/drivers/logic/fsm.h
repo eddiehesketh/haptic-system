@@ -20,6 +20,7 @@ typedef struct {
     float neutral_deg;       // position in free motion (90 roll/pitch, 0 tilt)
     float gain;              // servo deg per detected deg (1 roll/pitch, 2 tilt)
     float clamp_deg;         // offset from neutral when clamped (50 roll/pitch, 140 tilt)
+    float direction;         // +1 / -1: servo motion for a positive angle (brief: clockwise = negative)
 } axis_data;
 
 // Advance the FSM with a new angle (degrees) and write the servo pulse (us) to *position

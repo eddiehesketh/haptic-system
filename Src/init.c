@@ -78,24 +78,22 @@ static void initialise_timer() {
 
 
 // clock uses PB8 for clock
-static bool initialise_i2c() {
+static int initialise_i2c() {
     // Initialise I2C1 (f_scl = 100 kHz, f_i2c = 4 MHz)
     i2c_master_init(I2C1,11,19,19); 
-    return i2c_master_writereg(I2C1, MPU1_ADDR, REG_PWR_MGMT_1, 0x00);
+    return i2c_master_writereg(I2C1, MPU1_ADDR, REG_PWR_MGMT_1, 0x00); // wake MPU6050
 }
 
+volatile int i2c_init_error = -1; // 0 = OK, else I2C_ERR_* code (watch this in the debugger)
+
 // Initialisation block of the main flow chart
-void initialise_registers() {
+int initialise_registers() {
     initialise_clocks();
     initialise_inputs();
     initialise_pwm();
     initialise_outputs();
     initialise_timer();
     initialise_interrupts();
-    if (initialise_i2c()) {
-        pin_write(GPIOB, 11, PIN_LOW);
-        pin_write(GPIOA, 2, PIN_HIGH);
-    }
-
-    // initialise_i2c();
+    i2c_init_error = initialise_i2c();
+    return i2c_init_error;
 }

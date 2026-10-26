@@ -17,13 +17,19 @@
     { "type": "wokwi-text", "id": "text3", "top": 500, "left": 288, "attrs": { "text": "Tilt" } },
     { "type": "wokwi-text", "id": "text4", "top": 345, "left": -180, "attrs": { "text": "Autopilot" } },
     { "type": "wokwi-text", "id": "text5", "top": 345, "left": -20, "attrs": { "text": "Manual" } },
-    { "type": "wokwi-text", "id": "text6", "top": 230, "left": -150, "attrs": { "text": "Autopilot Btn" } }
+    { "type": "wokwi-text", "id": "text6", "top": 230, "left": -150, "attrs": { "text": "Autopilot Btn" } },
+    { "type": "wokwi-resistor", "id": "r_scl", "top": 120, "left": 260, "rotate": 90, "attrs": { "value": "4700" } },
+    { "type": "wokwi-resistor", "id": "r_sda", "top": 120, "left": 290, "rotate": 90, "attrs": { "value": "4700" } }
   ],
   "connections": [
     ["mpu1:VCC", "nucleo:3V3.1", "red", ["h-20", "v120"]],
     ["mpu1:GND", "nucleo:GND.1", "black", ["h-30", "v130"]],
     ["mpu1:SCL", "nucleo:PB8", "orange", ["h-40", "v140"]],
     ["mpu1:SDA", "nucleo:PB9", "blue", ["h-50", "v150"]],
+    ["r_scl:1", "nucleo:3V3.1", "red", []],
+    ["r_scl:2", "nucleo:PB8", "orange", []],
+    ["r_sda:1", "nucleo:3V3.1", "red", []],
+    ["r_sda:2", "nucleo:PB9", "blue", []],
     ["servo1:V+", "nucleo:5V.1", "red", ["v-50", "h-120"]],
     ["servo1:GND", "nucleo:GND.3", "black", ["v-40", "h-110"]],
     ["servo1:PWM", "nucleo:PB4", "purple", ["v-30", "h-100"]],

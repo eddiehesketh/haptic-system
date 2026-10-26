@@ -1,15 +1,17 @@
-   {
-     "version": "0.2.0",
-     "configurations": [
-       {
-         "name": "Wokwi GDB",
-         "type": "cppdbg",
-         "request": "launch",
-         "program": "${workspaceFolder}/build/Release/haptic-system.elf",
-         "cwd": "${workspaceFolder}",
-         "MIMode": "gdb",
-         "miDebuggerPath": "/Users/thomashesketh/Projects/microcontroller-repo/gdb/arm-none-eabi-gdb",
-         "miDebuggerServerAddress": "localhost:3333"
-       }
-     ]
-   }
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Wokwi GDB",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/Debug/haptic-system.elf",
+      "cwd": "${workspaceFolder}",
+      "MIMode": "gdb",
+      "miDebuggerPath": "/Users/thomashesketh/Projects/microcontroller-repo/gdb/arm-none-eabi-gdb",
+      "miDebuggerServerAddress": "localhost:3333",
+      "targetArchitecture": "arm",
+      "stopAtConnect": true
+    }
+  ]
+}

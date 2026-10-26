@@ -33,18 +33,36 @@ volatile uint16_t pitch_servo_pos = SERVO_90_DEG;
 volatile uint16_t tilt_servo_pos = SERVO_90_DEG;
 
 
+volatile uint8_t who_am_i = 0; // value read from MPU6050 WHO_AM_I (expect 0x68)
+
 int main(void)
 {
     // init_pin(GPIOA, 12, MODE_INPUT, PULL_DOWN); // New Item PA2
     // init_pin(GPIOA, 2, MODE_OUTPUT, NONE); // New Item PA2
 
     // enable_interrupt(A, BOTH, 12); // Step Gate PA10 -> EXTI4_15_IRQn
-    initialise_registers();
+    int err = initialise_registers();
 
+    if (err == I2C_OK) {
+        pin_write(GPIOA, 2, PIN_HIGH); // green on: MPU6050 wake-up write worked
 
-    /* Loop forever */
-	while (1) {
-        i2c_master_writereg(I2C1, MPU1_ADDR, REG_PWR_MGMT_1, 0x00);
+        // Confirm the sensor by reading WHO_AM_I (0x75), which should be 0x68
+        if (i2c_master_readregs(I2C1, MPU1_ADDR, 0x75, (uint8_t *)&who_am_i, 1) && who_am_i == 0x68) {
+            pin_write(GPIOB, 11, PIN_HIGH); // yellow on too: read path works
+            for (;;);
+        }
+        err = I2C_ERR_WHO_AM_I;
+    }
+
+    // I2C failed: blink the yellow LED (PB11) err times, pause, repeat
+    for (;;) {
+        for (int i = 0; i < err; i++) {
+            pin_write(GPIOB, 11, PIN_HIGH);
+            delay_ms(200);
+            pin_write(GPIOB, 11, PIN_LOW);
+            delay_ms(200);
+        }
+        delay_ms(1500);
     }
 }
 

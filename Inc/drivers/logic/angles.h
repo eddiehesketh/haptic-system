@@ -20,5 +20,6 @@ extern float tilt;
 float calculate_roll(int16_t a_y, int16_t a_z);
 float calculate_pitch(int16_t a_x, int16_t a_y, int16_t a_z);
 float calculate_tilt(float roll, float pitch);
+uint16_t convert_to_binary(float);
 bool read_mpu();
 

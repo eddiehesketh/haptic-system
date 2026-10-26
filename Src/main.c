@@ -23,11 +23,16 @@
 #include "init.h"
 #include "angles.h"
 
-#define SERVO_90_DEG (uint16_t)1500 // 1.5 ms = ~90 degrees
+// Servo position macros - Initialisation block of the main flow chart
+#define SERVO_45_DEG_ACW (uint16_t)1000 // 1.0 ms, ~45 degrees
+#define SERVO_90_DEG (uint16_t)1500 // 1.5 ms, ~90 degrees
+#define SERVO_45_DEG_CW (uint16_t)2000 // 2.0 ms, ~135 degrees
+#define SERVO_0_DEG (uint16_t)0 // 2.0 ms, ~135 degrees
+
 
 volatile uint16_t roll_servo_pos = SERVO_90_DEG; // TIM3 CH2 pulse, microseconds
 volatile uint16_t pitch_servo_pos = SERVO_90_DEG;
-volatile uint16_t tilt_servo_pos = SERVO_90_DEG;
+volatile uint16_t tilt_servo_pos = SERVO_0_DEG;
 
 volatile bool read_imu = false; // set by TIM3_IRQHandler at 50 Hz
 

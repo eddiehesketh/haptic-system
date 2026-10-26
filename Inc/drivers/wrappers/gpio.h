@@ -30,3 +30,4 @@ uint8_t pin_read(GPIO_TypeDef * port, uint8_t pin); // GPIOx_IDR
 
 // Set MODER. Leave PUPDR unchanged when p_mode is NONE.
 void init_pin(GPIO_TypeDef * port, uint8_t pin, pin_mode mode, pupdr_mode p_mode);
+void init_pin_af(GPIO_TypeDef * port, uint8_t pin, uint8_t af);

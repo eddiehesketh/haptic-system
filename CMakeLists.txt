@@ -21,7 +21,9 @@ enable_language(C ASM)
 set(PROJECT_NAME haptic-system)
 
 # Create an executable object type
-add_executable(${PROJECT_NAME})
+add_executable(${PROJECT_NAME}
+  Src/i2c.c
+  Src/angles.c)
 
 # Include additional CMake files for flags, components, and files
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/flags.cmake)

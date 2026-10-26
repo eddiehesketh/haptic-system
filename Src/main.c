@@ -22,13 +22,20 @@
 #include "stm32c031xx.h"
 #include "init.h"
 
+#define SERVO_90_DEG (uint16_t)1500 // 1.5 ms = ~90 degrees
+
+volatile uint16_t roll_servo_pos = SERVO_90_DEG; // TIM3 CH2 pulse, microseconds
+volatile uint16_t pitch_servo_pos = SERVO_90_DEG;
+volatile uint16_t tilt_servo_pos = SERVO_90_DEG;
+
 
 int main(void)
 {
-    init_pin(GPIOA, 12, MODE_INPUT, PULL_DOWN); // New Item PA2
-    init_pin(GPIOA, 2, MODE_OUTPUT, NONE); // New Item PA2
+    // init_pin(GPIOA, 12, MODE_INPUT, PULL_DOWN); // New Item PA2
+    // init_pin(GPIOA, 2, MODE_OUTPUT, NONE); // New Item PA2
 
-    enable_interrupt(A, BOTH, 12); // Step Gate PA10 -> EXTI4_15_IRQn
+    // enable_interrupt(A, BOTH, 12); // Step Gate PA10 -> EXTI4_15_IRQn
+    initialise_registers();
 
 
     /* Loop forever */
@@ -36,14 +43,26 @@ int main(void)
 }
 
 void EXTI4_15_IRQHandler() {
-    if (EXTI->RPR1 & (1 << 12)) { // RPR1 bit 5 set? (E-Stop rising)
+    if (EXTI->RPR1 & (1 << 12)) {
         EXTI->RPR1 |= (1 << 12); // Clear RPR1 bit 5 (write 1)
-        pin_write(GPIOA, 2, PIN_HIGH); // PA9 Fault LED = HIGH
-    } else if (EXTI->FPR1 & (1 << 12)) {
-        EXTI->FPR1 |= (1 << 12); // Clear RPR1 bit 5 (write 1)
-        pin_write(GPIOA, 2, PIN_LOW); // PA9 Fault LED = HIGH
+        toggle_output(GPIOA, 2);
+        toggle_output(GPIOB, 11);
     }
 
     // else: not PB5 or PA10, return
 }
+// PB4 -> Roll -> Channel 1
+// PB5 -> Pitch -> Channel 2
+// PB0 -> Tilt -> Channel 3
 
+
+// Main flow chart: TIM3_IRQHandler (50 Hz update event)
+void TIM3_IRQHandler() {
+    if (TIM3->SR & (1 << 0)) { // TIM3 SR UIF bit 0 set?
+        TIM3->SR &= ~(1 << 0); // clear UIF
+        TIM3->CCR1 = roll_servo_pos;
+        TIM3->CCR2 = pitch_servo_pos; // apply gate 1: CCR2 = servo_1_pos
+        TIM3->CCR3 = tilt_servo_pos; // apply gate 2: CCR3 = servo_2_pos
+    }
+    // else: not an update event, return
+}

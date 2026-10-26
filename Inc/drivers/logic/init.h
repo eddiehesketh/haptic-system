@@ -6,6 +6,7 @@
 #include "stm32c031xx.h"
 #include "timer.h"
 #include "pwm.h"
+#include "i2c.h"
 
 // Initialisation block of the main flow chart (clocks, GPIO, PWM, TIM3, NVIC)
 void initialise_registers();

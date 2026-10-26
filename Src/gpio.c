@@ -8,6 +8,22 @@ static void set_pin_mode(GPIO_TypeDef * port, uint8_t pin, pin_mode mode) {
     port->MODER |= (mode << shift);
 }
 
+// GPIOx_MODER: set this pin to alternate function
+static void set_alt_func(GPIO_TypeDef * port, uint8_t pin) {
+    uint8_t shift = 2 * pin;
+    port->MODER &= ~(3 << shift);
+    port->MODER |= (MODE_ALT << shift);
+}
+
+// GPIOx_AFR: AFRL for pins 0-7, AFRH for pins 8-15, 4 bits per pin
+static void set_af_alt_func(GPIO_TypeDef * port, uint8_t pin, uint8_t af) {
+    uint8_t idx = pin / 8;
+    uint8_t shift = (pin % 8) * 4;
+
+    port->AFR[idx] &= ~(0xF << shift);
+    port->AFR[idx] |= (af << shift);
+}
+
 // Set or clear one bit in GPIOx_ODR
 void pin_write(GPIO_TypeDef * port, uint8_t pin, pin_state state) {
     if (state == PIN_HIGH) {
@@ -41,3 +57,10 @@ void init_pin(GPIO_TypeDef * port, uint8_t pin, pin_mode mode, pupdr_mode p_mode
         set_pupdr_mode(port, pin, p_mode);
     }
 }
+void init_pin_af(GPIO_TypeDef * port, uint8_t pin, uint8_t af) {
+    // GPIOx_MODER: set this pin to alternate function
+    set_alt_func(port, pin);
+    set_af_alt_func(port, pin, af);
+
+}
+

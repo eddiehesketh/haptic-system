@@ -16,40 +16,39 @@ static uint16_t servo_deg_to_us(float deg) {
 void axis_fsm_update(axis_data *axis, volatile uint16_t *position, float angle_deg) {
     float a = fabsf(angle_deg);
     float exit_compliant = axis->enter_compliant - DEADBAND_DEG;
-    float exit_clamped   = axis->enter_clamped   - DEADBAND_DEG;
+    float exit_clamped = axis->enter_clamped - DEADBAND_DEG;
 
     // 1. Next state
     switch (axis->state) {
         case ZONE_FREE:
-            if      (a >  axis->enter_clamped)   axis->state = ZONE_CLAMPED;
+            if (a >  axis->enter_clamped) axis->state = ZONE_CLAMPED;
             else if (a >= axis->enter_compliant) axis->state = ZONE_COMPLIANT;
             break;
         case ZONE_COMPLIANT:
-            if      (a >  axis->enter_clamped)   axis->state = ZONE_CLAMPED;
-            else if (a <  exit_compliant)        axis->state = ZONE_FREE;
+            if (a >  axis->enter_clamped) axis->state = ZONE_CLAMPED;
+            else if (a < exit_compliant) axis->state = ZONE_FREE;
             break;
         case ZONE_CLAMPED:
-            if      (a <  exit_compliant)        axis->state = ZONE_FREE;
-            else if (a <  exit_clamped)          axis->state = ZONE_COMPLIANT;
+            if (a <  exit_compliant) axis->state = ZONE_FREE;
+            else if (a < exit_clamped) axis->state = ZONE_COMPLIANT;
             break;
     }
 
     // 2. Output from state
     float offset;
     switch (axis->state) {
-        case ZONE_COMPLIANT: offset = axis->gain * angle_deg;                                break;
-        case ZONE_CLAMPED:   offset = (angle_deg < 0.0f) ? -axis->clamp_deg : axis->clamp_deg; break;
+        case ZONE_COMPLIANT: offset = axis->gain * angle_deg; break;
+        case ZONE_CLAMPED: offset = (angle_deg < 0.0f) ? -axis->clamp_deg : axis->clamp_deg; break;
         case ZONE_FREE:
-        default:             offset = 0.0f;                                                  break;
+        default: offset = 0.0f; break;
     }
 
     *position = servo_deg_to_us(axis->neutral_deg + axis->direction * offset);
 }
 
-mode_state mode_fsm_update(mode_state mode, const axis_data *roll_axis,
-                           const axis_data *pitch_axis, bool button_pressed) {
+mode_state mode_fsm_update(mode_state mode, const axis_data *roll_axis, const axis_data *pitch_axis, bool button_pressed) {
     bool both_clamped = roll_axis->state == ZONE_CLAMPED && pitch_axis->state == ZONE_CLAMPED;
-    bool both_free    = roll_axis->state == ZONE_FREE    && pitch_axis->state == ZONE_FREE;
+    bool both_free = roll_axis->state == ZONE_FREE    && pitch_axis->state == ZONE_FREE;
 
     switch (mode) {
         case MODE_MANUAL:

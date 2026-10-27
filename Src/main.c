@@ -43,10 +43,12 @@ static axis_data roll_axis = {
     .state = ZONE_FREE, .enter_compliant = 30, .enter_clamped = 50,
     .neutral_deg = 90, .gain = 1, .clamp_deg = 50, .direction = -1,
 };
+
 static axis_data pitch_axis = {
     .state = ZONE_FREE, .enter_compliant = 30, .enter_clamped = 50,
     .neutral_deg = 90, .gain = 1, .clamp_deg = 50, .direction = -1,
 };
+
 static axis_data tilt_axis = {
     .state = ZONE_FREE, .enter_compliant = 20, .enter_clamped = 70,
     .neutral_deg = 0, .gain = 2, .clamp_deg = 140, .direction = 1,   // servo angle = 2 x tilt, clamp at 140

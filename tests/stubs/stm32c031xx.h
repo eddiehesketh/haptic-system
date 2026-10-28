@@ -8,8 +8,8 @@ typedef struct { volatile uint32_t CR1, CR2, ISR, ICR, TXDR, RXDR, TIMINGR; } I2
 typedef struct { volatile uint32_t CNT; } TIM_TypeDef;
 
 extern GPIO_TypeDef fake_gpioa, fake_gpiob;
-extern I2C_TypeDef  fake_i2c1;
-extern TIM_TypeDef  fake_tim16;
+extern I2C_TypeDef fake_i2c1;
+extern TIM_TypeDef fake_tim16;
 
 #define GPIOA (&fake_gpioa)
 #define GPIOB (&fake_gpiob)

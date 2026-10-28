@@ -41,14 +41,14 @@ void axis_fsm_update(axis_data *axis, volatile uint16_t *position, float angle_d
         case ZONE_CLAMPED: offset = (angle_deg < 0.0f) ? -axis->clamp_deg : axis->clamp_deg; break;
         case ZONE_FREE:
         default: offset = 0.0f; break;
-    }
+    }  
 
     *position = servo_deg_to_us(axis->neutral_deg + axis->direction * offset);
 }
 
 mode_state mode_fsm_update(mode_state mode, const axis_data *roll_axis, const axis_data *pitch_axis, bool button_pressed) {
     bool both_clamped = roll_axis->state == ZONE_CLAMPED && pitch_axis->state == ZONE_CLAMPED;
-    bool both_free = roll_axis->state == ZONE_FREE    && pitch_axis->state == ZONE_FREE;
+    bool both_free = roll_axis->state == ZONE_FREE && pitch_axis->state == ZONE_FREE;
 
     switch (mode) {
         case MODE_MANUAL:

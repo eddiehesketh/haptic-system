@@ -1,5 +1,4 @@
 #!/bin/sh
-# Build and run the host-side unit tests (uses your computer's C compiler, not the ARM one).
 # Run from the repo root:  sh tests/run_tests.sh
 set -e
 mkdir -p build/tests

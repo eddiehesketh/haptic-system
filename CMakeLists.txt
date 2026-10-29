@@ -24,7 +24,6 @@ set(PROJECT_NAME haptic-system)
 add_executable(${PROJECT_NAME}
   Src/i2c.c
   Src/angles.c
-  Src/convert.c
   Src/fsm.c)
 
 # Include additional CMake files for flags, components, and files

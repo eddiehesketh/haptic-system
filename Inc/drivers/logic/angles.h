@@ -2,7 +2,6 @@
 
 #include <math.h>
 #include "stm32c031xx.h"
-#include "convert.h"
 #include <stdint.h>
 #include <stdbool.h>
 #include "i2c.h"

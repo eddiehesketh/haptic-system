@@ -26,7 +26,6 @@
 
 // Servo position macros - Initialisation block of the main flow chart
 #define SERVO_45_DEG_ACW (uint16_t)1000 // 1.0 ms, ~45 degrees
-#define SERVO_90_DEG (uint16_t)1500 // 1.5 ms, ~90 degrees
 #define SERVO_45_DEG_CW (uint16_t)2000 // 2.0 ms, ~135 degrees
 #define SERVO_0_DEG (uint16_t)500 // 0.5 ms, ~0 degrees
 

@@ -4,7 +4,7 @@
   "editor": "wokwi",
   "parts": [
     { "type": "board-st-nucleo-c031c6", "id": "nucleo", "top": 0, "left": 0, "attrs": {} },
-    { "type": "wokwi-text", "id": "lbl_name", "top":400, "left": -180, "attrs": { "text": "Student Name (a1234567)" } },
+    { "type": "wokwi-text", "id": "lbl_name", "top":400, "left": -180, "attrs": { "text": "Thomas Hesketh (a1942028)" } },
     { "type": "wokwi-mpu6050", "id": "mpu1", "top": 170, "left": 300, "rotate": 270, "attrs": {  } },
     { "type": "wokwi-servo", "id": "servo1", "top": 350, "left": 0, "rotate": 90, "attrs": {} },
     { "type": "wokwi-servo", "id": "servo2", "top": 350, "left": 110, "rotate": 90, "attrs": {} },

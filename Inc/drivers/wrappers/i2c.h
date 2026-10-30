@@ -4,8 +4,10 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#define MPU1_ADDR (uint8_t)(0x68) // MPU6050 7 bit I2C address
+
 void enable_i2c_clock();
 void i2c_master_init(I2C_TypeDef *i2c, uint8_t presc, uint8_t sclh, uint8_t scll);
 bool check_timeout(uint16_t start_tick, uint16_t timeout_ms);
 bool i2c_master_readregs(I2C_TypeDef *i2c, uint8_t dev_addr, uint8_t reg_addr, uint8_t *rx_buf, uint16_t size);
-bool i2c_master_writereg(I2C_TypeDef *i2c, uint8_t dev_addr, uint8_t reg_addr, uint8_t data);   
+bool i2c_master_writereg(I2C_TypeDef *i2c, uint8_t dev_addr, uint8_t reg_addr, uint8_t data);

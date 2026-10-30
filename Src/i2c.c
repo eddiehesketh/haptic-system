@@ -34,7 +34,7 @@ bool i2c_master_writereg(I2C_TypeDef *i2c, uint8_t dev_addr, uint8_t reg_addr, u
 
     // Write the target device register address over I2C and one byte of data
     // device_addrs, num_bytes, autoend = true, start transmission
-    i2c->CR2 &= ~(1 << 10);                                 // Configure to write
+    // RD_WRN (bit 10) is left clear for a write
     i2c->CR2 = (dev_addr << 1) | (2 << 16) | (1 << 25) | (1 << 13);
 
     start_tick = (uint16_t)TIM16->CNT;                      // reset start_tick counter
@@ -46,10 +46,10 @@ bool i2c_master_writereg(I2C_TypeDef *i2c, uint8_t dev_addr, uint8_t reg_addr, u
     // Device address has been written, TXDR now empty
     i2c->TXDR = reg_addr;                                   // Address of register on peripheral to write
 
-    // FIX (not in lecture code): TXIS can still read as set straight after the TXDR
-    // write. Without this short wait the TXIS loop below passes instantly, data
-    // overwrites reg_addr, only one byte is sent, and the transfer hangs waiting for
-    // byte 2 (ISR = 0x800B). Wait for the hardware to take reg_addr first.
+    // TXIS can still read as set straight after the TXDR write. Without this short
+    // wait the TXIS loop below passes instantly, the data byte overwrites reg_addr,
+    // only one byte is sent, and the transfer hangs waiting for byte 2 (ISR = 0x800B).
+    // Wait for the hardware to take reg_addr first.
     for (volatile uint32_t n = 0; (i2c->ISR & (1 << 1)) && n < 2000; n++);
 
     start_tick = (uint16_t)TIM16->CNT;                      // reset start_tick counter
@@ -83,7 +83,7 @@ bool i2c_master_readregs(I2C_TypeDef *i2c, uint8_t dev_addr, uint8_t reg_addr, u
 
     // Write the target device register address over I2C
     // device_addrs, num_bytes, autoend = true, start transmission
-    i2c->CR2 &= ~(1 << 10);                                 // Configure to write
+    // RD_WRN (bit 10) is left clear for a write
     i2c->CR2 = (dev_addr << 1) | (1 << 16) | (1 << 25) | (1 << 13);
 
     start_tick = (uint16_t)TIM16->CNT;                      // reset start_tick counter

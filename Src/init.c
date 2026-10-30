@@ -6,7 +6,6 @@
 #include "stm32c031xx.h"
 #include "timer.h"
 
-#define MPU1_ADDR 0x68
 #define REG_PWR_MGMT_1 0x6B
 #define ACCEL_CONFIG_ADDR (uint8_t)(0x1C)
 #define ACCEL_CONFIG (uint8_t)(0x18)

@@ -48,16 +48,17 @@ int main(void)
         while (!read_imu);
         read_imu = false;
 
+        // Read mpu to get most recent data
         if (read_mpu()) {
-            axis_fsm_update(&roll_axis,  &roll_servo_pos,  roll);
-            axis_fsm_update(&pitch_axis, &pitch_servo_pos, pitch);
-            axis_fsm_update(&tilt_axis,  &tilt_servo_pos,  tilt);
+            axis_fsm_update(&roll_axis,  &roll_servo_pos,  roll); // Roll axis fsm
+            axis_fsm_update(&pitch_axis, &pitch_servo_pos, pitch); // Pitch axis fsm
+            axis_fsm_update(&tilt_axis,  &tilt_servo_pos,  tilt); // Tilt axis fsm
         }
 
         // Consume the button press (if any) and run the autopilot/manual FSM
         bool pressed = button_pressed;
         button_pressed = false;
-        mode = mode_fsm_update(mode, &roll_axis, &pitch_axis, pressed);
+        mode = mode_fsm_update(mode, &roll_axis, &pitch_axis, pressed); // Update pilot mode
     }
 }
 

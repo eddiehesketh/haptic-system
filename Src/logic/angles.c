@@ -16,7 +16,7 @@ float tilt = 0;
 void calculate_angles(int16_t a_x, int16_t a_y, int16_t a_z, float *phi, float *theta, float *alpha) {
     float ax = (float)a_x, ay = (float)a_y, az = (float)a_z;
 
-    *phi   = atan2f(ay, az) * RAD_TO_DEG; // (1) roll
+    *phi = atan2f(ay, az) * RAD_TO_DEG; // (1) roll
     *theta = atan2f(-ax, sqrtf(ay * ay + az * az)) * RAD_TO_DEG; // (2) pitch
     *alpha = sqrtf((*theta) * (*theta) + (*phi) * (*phi)); // (3) tilt
 }

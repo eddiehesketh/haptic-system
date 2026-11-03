@@ -13,10 +13,11 @@ static uint16_t servo_deg_to_us(float deg) {
     return (uint16_t)(SERVO_US_AT_0_DEG + deg * SERVO_US_PER_DEG);
 }
 
+// Update axis finite state machine.
 void axis_fsm_update(axis_data *axis, volatile uint16_t *position, float angle_deg) {
-    float a = fabsf(angle_deg);
-    float exit_compliant = axis->enter_compliant - DEADBAND_DEG;
-    float exit_clamped = axis->enter_clamped - DEADBAND_DEG;
+    float a = fabsf(angle_deg); // Get absolute angle
+    float exit_compliant = axis->enter_compliant - DEADBAND_DEG; // Get compliant angle
+    float exit_clamped = axis->enter_clamped - DEADBAND_DEG; // Get clamped angle
 
     // 1. Next state
     switch (axis->state) {
@@ -43,13 +44,16 @@ void axis_fsm_update(axis_data *axis, volatile uint16_t *position, float angle_d
         default: offset = 0.0f; break;
     }
 
+    // Convert into position
     *position = servo_deg_to_us(axis->neutral_deg + axis->direction * offset);
 }
 
+// FSM to update mode (autopilot vs manual)
 mode_state mode_fsm_update(mode_state mode, const axis_data *roll_axis, const axis_data *pitch_axis, bool button_pressed) {
     bool both_clamped = roll_axis->state == ZONE_CLAMPED && pitch_axis->state == ZONE_CLAMPED;
     bool both_free = roll_axis->state == ZONE_FREE && pitch_axis->state == ZONE_FREE;
 
+    // Switch statement to set mode
     switch (mode) {
         case MODE_MANUAL:
             // Both axes in their impenetrable regions, or button pressed -> autopilot

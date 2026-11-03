@@ -92,7 +92,7 @@ static bool initialise_i2c() {
     return ok && i2c_master_writereg(I2C1, MPU1_ADDR, REG_ACCEL_CONFIG, ACCEL_FS_16G); // +-16 g
 }
 
-// Initialisation block of the main flow chart
+// Hardware initialisation
 void initialise_registers(void) {
     initialise_clocks();
     initialise_i2c_pins();

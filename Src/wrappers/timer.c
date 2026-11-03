@@ -44,7 +44,7 @@ void enable_timer(TIM_TypeDef * tim, uint16_t arr, uint16_t psc) {
 
 // Clock the timer and start it as a free-running counter (no interrupt, no NVIC)
 void enable_timer_no_interrupt(TIM_TypeDef * tim, uint16_t arr, uint16_t psc) {
-    enable_rcc_and_get_type(tim);
+    enable_rcc_and_get_type(tim); // only the RCC enable is needed here, the IRQ number is unused
 
     tim->PSC = psc;
     tim->ARR = arr;

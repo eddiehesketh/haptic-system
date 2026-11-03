@@ -1,6 +1,7 @@
 #pragma once
 
-#include "stm32c0xx.h"
+#include <stdint.h>
+#include "stm32c031xx.h"
 
 typedef enum {
     CCM_OUTPUT = 0, // CCMRx CCxS 00

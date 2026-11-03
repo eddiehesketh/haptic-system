@@ -20,6 +20,33 @@
           "path": "Src/main.c"
         },
         {
+          "path": "Src/wrappers/reset_and_control_clock.c"
+        },
+        {
+          "path": "Src/wrappers/gpio.c"
+        },
+        {
+          "path": "Src/wrappers/interrupt.c"
+        },
+        {
+          "path": "Src/wrappers/timer.c"
+        },
+        {
+          "path": "Src/wrappers/pwm.c"
+        },
+        {
+          "path": "Src/logic/init.c"
+        },
+        {
+          "path": "Src/wrappers/i2c.c"
+        },
+        {
+          "path": "Src/logic/angles.c"
+        },
+        {
+          "path": "Src/logic/fsm.c"
+        },
+        {
           "path": "Src/startup_stm32c031xx.S"
         }
       ],
@@ -131,6 +158,33 @@
         },
         {
           "path": "Src/main.c"
+        },
+        {
+          "path": "Src/wrappers/reset_and_control_clock.c"
+        },
+        {
+          "path": "Src/wrappers/gpio.c"
+        },
+        {
+          "path": "Src/wrappers/interrupt.c"
+        },
+        {
+          "path": "Src/wrappers/timer.c"
+        },
+        {
+          "path": "Src/wrappers/pwm.c"
+        },
+        {
+          "path": "Src/logic/init.c"
+        },
+        {
+          "path": "Src/wrappers/i2c.c"
+        },
+        {
+          "path": "Src/logic/angles.c"
+        },
+        {
+          "path": "Src/logic/fsm.c"
         },
         {
           "path": "Src/startup_stm32c031xx.S"

@@ -57,10 +57,10 @@ void init_pin(GPIO_TypeDef * port, uint8_t pin, pin_mode mode, pupdr_mode p_mode
         set_pupdr_mode(port, pin, p_mode);
     }
 }
+
+// Set this pin to alternate function mode and select AF number (0-7)
 void init_pin_af(GPIO_TypeDef * port, uint8_t pin, uint8_t af) {
-    // GPIOx_MODER: set this pin to alternate function
     set_alt_func(port, pin);
     set_af_alt_func(port, pin, af);
-
 }
 

@@ -1,6 +1,7 @@
 #pragma once
 
-#include "stm32c0xx.h"
+#include <stdint.h>
+#include "stm32c031xx.h"
 #include "reset_and_control_clock.h"
 
 typedef enum {
@@ -9,9 +10,6 @@ typedef enum {
     BOTH
 } edge_trigger_mode;
 
+// Configure EXTI + NVIC for this pin. NVIC priority left at reset (0).
 // Must provide EXTI0_1 / EXTI2_3 / EXTI4_15_IRQHandler
-// priority is 0..3 (lower number preempts)
-void enable_interrupt_priority(gpio_port port, edge_trigger_mode mode, uint8_t pin, uint8_t priority);
-
-// Same EXTI/NVIC setup. NVIC priority left at reset
 void enable_interrupt(gpio_port port, edge_trigger_mode mode, uint8_t pin);

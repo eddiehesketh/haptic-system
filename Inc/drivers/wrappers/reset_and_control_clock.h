@@ -1,5 +1,6 @@
 #pragma once
-#include "stm32c0xx.h"
+
+#include "stm32c031xx.h"
 
 typedef enum {
     A = 0, // RCC_IOPENR GPIOAEN

@@ -1,11 +1,11 @@
 #include "fsm.h"
 #include "gpio.h"
+#include <math.h>
 
 // Servo pulse mapping: 500 us = 0 deg, 1500 us = 90 deg, 2500 us = 180 deg
-// (matches 1000 us ~ 45 deg and 2000 us ~ 135 deg). Check against Wokwi.
+// (matches 1000 us ~ 45 deg and 2000 us ~ 135 deg).
 #define SERVO_US_AT_0_DEG   500.0f
 #define SERVO_US_PER_DEG    (2000.0f / 180.0f)
-
 
 static uint16_t servo_deg_to_us(float deg) {
     if (deg < 0.0f)   deg = 0.0f;
@@ -41,7 +41,7 @@ void axis_fsm_update(axis_data *axis, volatile uint16_t *position, float angle_d
         case ZONE_CLAMPED: offset = (angle_deg < 0.0f) ? -axis->clamp_deg : axis->clamp_deg; break;
         case ZONE_FREE:
         default: offset = 0.0f; break;
-    }  
+    }
 
     *position = servo_deg_to_us(axis->neutral_deg + axis->direction * offset);
 }

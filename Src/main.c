@@ -8,8 +8,6 @@
  */
 
 #include <stdint.h>
-#include "gpio.h"
-#include "interrupt.h"
 #include "stm32c031xx.h"
 #include "init.h"
 #include "angles.h"

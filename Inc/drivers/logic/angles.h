@@ -1,10 +1,7 @@
 #pragma once
 
-#include <math.h>
-#include "stm32c031xx.h"
 #include <stdint.h>
 #include <stdbool.h>
-#include "i2c.h"
 
 // Latest orientation angles in DEGREES, updated by read_mpu()
 extern float roll;  // phi   = atan2(a_y, a_z)                  Eq. (1)

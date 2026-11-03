@@ -21,20 +21,12 @@ enable_language(C ASM)
 set(PROJECT_NAME haptic-system)
 
 # Create an executable object type
-add_executable(${PROJECT_NAME}
-  Src/i2c.c
-  Src/angles.c
-  Src/fsm.c)
+add_executable(${PROJECT_NAME})
 
 # Include additional CMake files for flags, components, and files
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/flags.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/components.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/files.cmake)
-
-# Add sources to executable/library
-target_sources(${PROJECT_NAME} PRIVATE
-  # User defined sources
-)
 
 # Add include directories
 target_include_directories(${PROJECT_NAME} PRIVATE
@@ -48,11 +40,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     Inc/drivers/wrappers
 )
 
-# Compiler options
-target_compile_options(${PROJECT_NAME} PRIVATE
-  # User defined compiler options
-)
-
 # Add additional defined symbols
 target_compile_definitions(${PROJECT_NAME} PRIVATE
     ${symbols_SYMB}
@@ -63,19 +50,8 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
     STM32C031xx
 )
 
-# Linker options
-target_link_options(${PROJECT_NAME} PRIVATE 
-  # User defined linker options
-)
-
-# Add additional linker search directories
-target_link_directories(${PROJECT_NAME} PRIVATE
-  # Add additional linker search directories here
-)
-
 # Add additional linker libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE
-  # Add additional linker libraries here
   m   # maths library (atan2f, sqrtf); must come after the object files
 )
 

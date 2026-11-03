@@ -1,9 +1,7 @@
 #pragma once
 
 #include "stm32c031xx.h"
-#include "stm32c0xx.h"
 #include <stdint.h>
-
 
 typedef enum {
     PIN_LOW = 0,
@@ -30,4 +28,5 @@ uint8_t pin_read(GPIO_TypeDef * port, uint8_t pin); // GPIOx_IDR
 
 // Set MODER. Leave PUPDR unchanged when p_mode is NONE.
 void init_pin(GPIO_TypeDef * port, uint8_t pin, pin_mode mode, pupdr_mode p_mode);
+// Set this pin to alternate function mode and select AF number (0-7)
 void init_pin_af(GPIO_TypeDef * port, uint8_t pin, uint8_t af);

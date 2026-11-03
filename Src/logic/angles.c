@@ -1,4 +1,6 @@
 #include "angles.h"
+#include "i2c.h"
+#include "stm32c031xx.h"
 #include <math.h>
 
 #define ACCEL_ADDRESS (uint8_t)(0x3B) // ACCEL_XOUT_H

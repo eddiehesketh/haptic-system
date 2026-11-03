@@ -56,3 +56,9 @@ dkms.conf
 
 # Build files
 /build
+
+# macOS
+.DS_Store
+
+# IDE-local state
+/.settings

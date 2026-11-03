@@ -7,18 +7,18 @@
 #include "timer.h"
 
 // MPU6050 registers
-#define REG_PWR_MGMT_1    0x6B // writing 0x00 wakes the device from sleep
-#define REG_ACCEL_CONFIG  0x1C
-#define ACCEL_FS_16G      0x18 // AFS_SEL = 3: +-16 g full scale
+#define REG_PWR_MGMT_1 0x6B // writing 0x00 wakes the device from sleep
+#define REG_ACCEL_CONFIG 0x1C
+#define ACCEL_FS_16G 0x18 // AFS_SEL = 3: +-16 g full scale
 
 // Alternate function numbers
 #define AF_TIM3_PWM 1 // PB4 / PB5 / PB0 -> TIM3 CH1 / CH2 / CH3
-#define AF_I2C1     6 // PB8 SCL, PB9 SDA
+#define AF_I2C1 6 // PB8 SCL, PB9 SDA
 
 // I2C1 timing (f_i2c = 4 MHz -> f_scl = 100 kHz), written to TIMINGR
 #define I2C_PRESC 11
-#define I2C_SCLH  19
-#define I2C_SCLL  19
+#define I2C_SCLH 19
+#define I2C_SCLL 19
 
 // TIM3: 48 MHz / (PSC + 1) = 1 MHz tick (1 us), ARR + 1 ticks = 20 ms (50 Hz)
 #define TIM3_PSC 47
@@ -46,7 +46,7 @@ static void initialise_i2c_pins() {
     init_pin_af(GPIOB, 8, AF_I2C1);
     init_pin(GPIOB, 9, MODE_ALT, PULL_UP); // I2C1 SDA
     init_pin_af(GPIOB, 9, AF_I2C1);
-    GPIOB->OTYPER |= (1 << 8) | (1 << 9);  // I2C needs open-drain
+    GPIOB->OTYPER |= (1 << 8) | (1 << 9); // I2C needs open-drain
 }
 
 // Configure inputs: PA12 autopilot button (pull-down)
@@ -68,7 +68,7 @@ static void initialise_pwm() {
 // Configure outputs: PA2 autopilot LED, PB11 manual LED
 static void initialise_outputs() {
     init_pin(GPIOB, 11, MODE_OUTPUT, NONE); // manual LED
-    init_pin(GPIOA, 2, MODE_OUTPUT, NONE);  // autopilot LED
+    init_pin(GPIOA, 2, MODE_OUTPUT, NONE); // autopilot LED
 }
 
 // Enable the autopilot button interrupt: PA12 rising edge -> EXTI4_15_IRQn
@@ -88,7 +88,7 @@ static void initialise_timer() {
 // Returns false if either write to the MPU6050 fails.
 static bool initialise_i2c() {
     i2c_master_init(I2C1, I2C_PRESC, I2C_SCLH, I2C_SCLL);
-    bool ok = i2c_master_writereg(I2C1, MPU1_ADDR, REG_PWR_MGMT_1, 0x00);                 // wake MPU6050
+    bool ok = i2c_master_writereg(I2C1, MPU1_ADDR, REG_PWR_MGMT_1, 0x00); // wake MPU6050
     return ok && i2c_master_writereg(I2C1, MPU1_ADDR, REG_ACCEL_CONFIG, ACCEL_FS_16G); // +-16 g
 }
 

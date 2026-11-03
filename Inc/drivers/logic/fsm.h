@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define DEADBAND_DEG 5.0f   // hysteresis applied when leaving clamped / compliant
+#define DEADBAND_DEG 5.0f // hysteresis applied when leaving clamped / compliant
 
 // ---------- Axis FSM (re-used for roll, pitch and tilt) ----------
 
@@ -12,13 +12,13 @@ typedef enum { ZONE_FREE, ZONE_COMPLIANT, ZONE_CLAMPED } fsm_state;
 typedef struct {
     fsm_state state;
     // Thresholds on |angle| (degrees). Exits are DEADBAND_DEG inside the entries.
-    float enter_compliant;   // free -> compliant
-    float enter_clamped;     // compliant -> clamped
+    float enter_compliant; // free -> compliant
+    float enter_clamped; // compliant -> clamped
     // Servo output (servo degrees, 0-180)
-    float neutral_deg;       // position in free motion (90 roll/pitch, 0 tilt)
-    float gain;              // servo deg per detected deg (1 roll/pitch, 2 tilt)
-    float clamp_deg;         // offset from neutral when clamped (50 roll/pitch, 140 tilt)
-    float direction;         // +1 / -1: servo motion for a positive angle (brief: clockwise = negative)
+    float neutral_deg; // position in free motion (90 roll/pitch, 0 tilt)
+    float gain; // servo deg per detected deg (1 roll/pitch, 2 tilt)
+    float clamp_deg; // offset from neutral when clamped (50 roll/pitch, 140 tilt)
+    float direction; // +1 / -1: servo motion for a positive angle (brief: clockwise = negative)
 } axis_data;
 
 // Advance the FSM with a new angle (degrees) and write the servo pulse (us) to *position

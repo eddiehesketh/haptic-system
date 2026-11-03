@@ -18,7 +18,7 @@ volatile uint16_t roll_servo_pos = SERVO_90_DEG;
 volatile uint16_t pitch_servo_pos = SERVO_90_DEG;
 volatile uint16_t tilt_servo_pos = SERVO_0_DEG;
 
-volatile bool read_imu = false;       // set by TIM3_IRQHandler at 50 Hz
+volatile bool read_imu = false; // set by TIM3_IRQHandler at 50 Hz
 volatile bool button_pressed = false; // set by EXTI4_15_IRQHandler on the autopilot button
 
 // One FSM instance per axis (same code, different parameters)
@@ -34,7 +34,7 @@ static axis_data pitch_axis = {
 
 static axis_data tilt_axis = {
     .state = ZONE_FREE, .enter_compliant = 20, .enter_clamped = 70,
-    .neutral_deg = 0, .gain = 2, .clamp_deg = 140, .direction = 1,   // servo angle = 2 x tilt, clamp at 140
+    .neutral_deg = 0, .gain = 2, .clamp_deg = 140, .direction = 1, // servo angle = 2 x tilt, clamp at 140
 };
 
 int main(void)
@@ -65,7 +65,7 @@ int main(void)
 void EXTI4_15_IRQHandler() {
     if (EXTI->RPR1 & (1 << 12)) {
         EXTI->RPR1 = (1 << 12); // write 1 to clear the PA12 rising-edge pending bit
-        button_pressed = true;  // handled by the mode FSM in the main loop
+        button_pressed = true; // handled by the mode FSM in the main loop
     }
 }
 
@@ -73,9 +73,9 @@ void EXTI4_15_IRQHandler() {
 void TIM3_IRQHandler() {
     if (TIM3->SR & (1 << 0)) { // UIF set?
         TIM3->SR &= ~(1 << 0); // clear UIF
-        read_imu = true;       // tell the main loop to read the MPU6050
-        TIM3->CCR1 = roll_servo_pos;  // PB4 roll
+        read_imu = true; // tell the main loop to read the MPU6050
+        TIM3->CCR1 = roll_servo_pos; // PB4 roll
         TIM3->CCR2 = pitch_servo_pos; // PB5 pitch
-        TIM3->CCR3 = tilt_servo_pos;  // PB0 tilt
+        TIM3->CCR3 = tilt_servo_pos; // PB0 tilt
     }
 }

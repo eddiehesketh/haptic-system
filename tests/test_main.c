@@ -12,10 +12,10 @@
 // Command to run the tests (from the repo root):  sh tests/run_tests.sh
 // Note: do NOT compile with -DNDEBUG, which turns every assert() into a no-op.
 
-#define LSB_PER_G  2048.0f   // MPU6050 at +-16 g (ACCEL_CONFIG = 0x18)
-#define ANGLE_TOL  0.1f      // degrees
-#define SERVO_TOL  0.2f      // servo degrees (1 us of pulse is ~0.09 deg)
-#define ONE_G_TOL  0.01f     // allowed error on |a| = 1 g
+#define LSB_PER_G 2048.0f // MPU6050 at +-16 g (ACCEL_CONFIG = 0x18)
+#define ANGLE_TOL 0.1f // degrees
+#define SERVO_TOL 0.2f // servo degrees (1 us of pulse is ~0.09 deg)
+#define ONE_G_TOL 0.01f // allowed error on |a| = 1 g
 
 // Fakes: the hardware the logic touches is replaced so it runs on a PC
 
@@ -24,7 +24,7 @@ I2C_TypeDef fake_i2c1;
 TIM_TypeDef fake_tim16;
 
 bool led_autopilot = false; // last value written to PA2
-bool led_manual = false;    // last value written to PB11
+bool led_manual = false; // last value written to PB11
 
 void pin_write(GPIO_TypeDef *port, uint8_t pin, pin_state state) {
     if (port == GPIOA && pin == 2) led_autopilot = (state == PIN_HIGH);
@@ -161,7 +161,7 @@ void test_axis_deadband(void) {
     assert_servo(step(&roll_axis, 44), 46); // below 45: compliant
     assert(roll_axis.state == ZONE_COMPLIANT);
 
-    step(&roll_axis, 27);// 25-30: stays compliant
+    step(&roll_axis, 27); // 25-30: stays compliant
     assert(roll_axis.state == ZONE_COMPLIANT);
     step(&roll_axis, 24); // below 25: free
     assert(roll_axis.state == ZONE_FREE);
@@ -294,7 +294,7 @@ void test_case_roll_only(void) {
     assert_servo(pitch_servo_pos, 90);
 
     setup();
-    apply(0.00f, -0.64f, 0.77f, false);// compliant (-)
+    apply(0.00f, -0.64f, 0.77f, false); // compliant (-)
     assert(roll_axis.state == ZONE_COMPLIANT && pitch_axis.state == ZONE_FREE);
     assert_servo(roll_servo_pos, 90 - roll);
 
@@ -319,7 +319,7 @@ void test_case_pitch_only(void) {
     assert_servo(roll_servo_pos, 90);
 
     setup();
-    apply(0.64f, 0.00f, 0.77f, false);// compliant (-)
+    apply(0.64f, 0.00f, 0.77f, false); // compliant (-)
     assert(pitch_axis.state == ZONE_COMPLIANT && roll_axis.state == ZONE_FREE);
     assert_servo(pitch_servo_pos, 90 - pitch);
 

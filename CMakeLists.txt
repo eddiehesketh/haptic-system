@@ -52,7 +52,7 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 
 # Add additional linker libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE
-  m   # maths library (atan2f, sqrtf); must come after the object files
+  m # maths library (atan2f, sqrtf); must come after the object files
 )
 
 add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD

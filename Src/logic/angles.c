@@ -4,7 +4,7 @@
 #include <math.h>
 
 #define ACCEL_ADDRESS (uint8_t)(0x3B) // ACCEL_XOUT_H
-#define NO_BYTES 6               // ACCEL_XOUT_H .. ACCEL_ZOUT_L
+#define NO_BYTES 6 // ACCEL_XOUT_H .. ACCEL_ZOUT_L
 #define RAD_TO_DEG (180.0f / 3.14159265f)
 
 float roll = 0;

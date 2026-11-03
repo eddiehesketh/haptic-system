@@ -7,7 +7,7 @@ typedef enum {
     B = 1, // RCC_IOPENR GPIOBEN
     C = 2, // RCC_IOPENR GPIOCEN
     D = 3, // RCC_IOPENR GPIODEN
-    F = 5  // RCC_IOPENR GPIOFEN; no GPIOE, bit 4 unused
+    F = 5 // RCC_IOPENR GPIOFEN; no GPIOE, bit 4 unused
 } gpio_port;
 
 // GPIO registers are not accessible until this bit is set (RCC_IOPENR)

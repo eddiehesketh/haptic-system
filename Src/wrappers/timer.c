@@ -48,7 +48,7 @@ void enable_timer_no_interrupt(TIM_TypeDef * tim, uint16_t arr, uint16_t psc) {
 
     tim->PSC = psc;
     tim->ARR = arr;
-    tim->EGR = 1 << 0;  // UG: copy PSC into the active prescaler, clear CNT
-    tim->SR = 0;        // UG also sets UIF
+    tim->EGR = 1 << 0; // UG: copy PSC into the active prescaler, clear CNT
+    tim->SR = 0; // UG also sets UIF
     tim->CR1 |= 1 << 0;
 }

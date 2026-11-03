@@ -26,7 +26,7 @@ bool i2c_master_writereg(I2C_TypeDef *i2c, uint8_t dev_addr, uint8_t reg_addr, u
     const uint16_t timeout_ms = 10;
 
     // Wait for i2c bus free
-    start_tick = (uint16_t)TIM16->CNT;                      // use current counter value as start time (1 tick = 1ms)
+    start_tick = (uint16_t)TIM16->CNT; // use current counter value as start time (1 tick = 1ms)
     while (i2c->ISR & (1 << 15)) {
         // Check Busy flag. If timeout > 10 ms; bus is busy. Exit
         if (check_timeout(start_tick, timeout_ms)) return false;
@@ -37,14 +37,14 @@ bool i2c_master_writereg(I2C_TypeDef *i2c, uint8_t dev_addr, uint8_t reg_addr, u
     // RD_WRN (bit 10) is left clear for a write
     i2c->CR2 = (dev_addr << 1) | (2 << 16) | (1 << 25) | (1 << 13);
 
-    start_tick = (uint16_t)TIM16->CNT;                      // reset start_tick counter
+    start_tick = (uint16_t)TIM16->CNT; // reset start_tick counter
     // Wait for communication of device address to complete
     while (!(i2c->ISR & (1 << 1))) {
         // Check status of TXIS
         if (check_timeout(start_tick, timeout_ms)) return false;
     }
     // Device address has been written, TXDR now empty
-    i2c->TXDR = reg_addr;                                   // Address of register on peripheral to write
+    i2c->TXDR = reg_addr; // Address of register on peripheral to write
 
     // TXIS can still read as set straight after the TXDR write. Without this short
     // wait the TXIS loop below passes instantly, the data byte overwrites reg_addr,
@@ -52,20 +52,20 @@ bool i2c_master_writereg(I2C_TypeDef *i2c, uint8_t dev_addr, uint8_t reg_addr, u
     // Wait for the hardware to take reg_addr first.
     for (volatile uint32_t n = 0; (i2c->ISR & (1 << 1)) && n < 2000; n++);
 
-    start_tick = (uint16_t)TIM16->CNT;                      // reset start_tick counter
+    start_tick = (uint16_t)TIM16->CNT; // reset start_tick counter
     // Wait for communication of register address to complete
     while (!(i2c->ISR & (1 << 1))) {
         // Check status of TXIS
         if (check_timeout(start_tick, timeout_ms)) return false;
     }
-    i2c->TXDR = data;                                       // Actual data to write to peripheral
+    i2c->TXDR = data; // Actual data to write to peripheral
 
-    start_tick = (uint16_t)TIM16->CNT;                      // Reset Start Tick counter
+    start_tick = (uint16_t)TIM16->CNT; // Reset Start Tick counter
     while (!(i2c->ISR & (1 << 5))) {
         // Wait for communication with peripheral to be complete (check stop flag)
         if (check_timeout(start_tick, timeout_ms)) return false;
     }
-    i2c->ICR |= (1 << 5);                                   // Write 1 to clear stop flag
+    i2c->ICR |= (1 << 5); // Write 1 to clear stop flag
 
     return true;
 }
@@ -75,7 +75,7 @@ bool i2c_master_readregs(I2C_TypeDef *i2c, uint8_t dev_addr, uint8_t reg_addr, u
     const uint16_t timeout_ms = 10;
 
     // Wait for i2c bus free
-    start_tick = (uint16_t)TIM16->CNT;                      // use current counter value as start time (1 tick = 1ms)
+    start_tick = (uint16_t)TIM16->CNT; // use current counter value as start time (1 tick = 1ms)
     while (i2c->ISR & (1 << 15)) {
         // Check Busy flag. If timeout > 10 ms; bus is busy. Exit
         if (check_timeout(start_tick, timeout_ms)) return false;
@@ -86,7 +86,7 @@ bool i2c_master_readregs(I2C_TypeDef *i2c, uint8_t dev_addr, uint8_t reg_addr, u
     // RD_WRN (bit 10) is left clear for a write
     i2c->CR2 = (dev_addr << 1) | (1 << 16) | (1 << 25) | (1 << 13);
 
-    start_tick = (uint16_t)TIM16->CNT;                      // reset start_tick counter
+    start_tick = (uint16_t)TIM16->CNT; // reset start_tick counter
     // Wait for communication of device address to complete
     while (!(i2c->ISR & (1 << 1))) {
         // Check status of TXIS
@@ -94,17 +94,17 @@ bool i2c_master_readregs(I2C_TypeDef *i2c, uint8_t dev_addr, uint8_t reg_addr, u
     }
 
     // Device address has been written, TXDR now empty
-    i2c->TXDR = reg_addr;                                   // Address of register on peripheral to read
+    i2c->TXDR = reg_addr; // Address of register on peripheral to read
 
-    start_tick = (uint16_t)TIM16->CNT;                      // Reset Start Tick counter
+    start_tick = (uint16_t)TIM16->CNT; // Reset Start Tick counter
     while (!(i2c->ISR & (1 << 5))) {
         // Wait for communication with peripheral to be complete
         if (check_timeout(start_tick, timeout_ms)) return false;
     }
-    i2c->ICR |= (1 << 5);                                   // Write 1 to clear stop flag
+    i2c->ICR |= (1 << 5); // Write 1 to clear stop flag
 
     // Small pause to check state of I2C line
-    start_tick = (uint16_t)TIM16->CNT;                      // Reset Start Tick counter
+    start_tick = (uint16_t)TIM16->CNT; // Reset Start Tick counter
     while (i2c->ISR & (1 << 15)) {
         // Check Busy flag. If timeout > 10 ms; bus is busy. Exit
         if (check_timeout(start_tick, timeout_ms)) return false;
@@ -116,7 +116,7 @@ bool i2c_master_readregs(I2C_TypeDef *i2c, uint8_t dev_addr, uint8_t reg_addr, u
 
     // Populate buffer with number of bytes that are expected to be received from peripheral to micro
     for (uint16_t i = 0; i < size; i++) {
-        start_tick = (uint16_t)TIM16->CNT;                  // Reset Start tick counter
+        start_tick = (uint16_t)TIM16->CNT; // Reset Start tick counter
         while (!(i2c->ISR & (1 << 2))) {
             // While no data has been received, check if a NACK transmitted across or timeout
             if (i2c->ISR & (1 << 4)) return false;
@@ -126,12 +126,12 @@ bool i2c_master_readregs(I2C_TypeDef *i2c, uint8_t dev_addr, uint8_t reg_addr, u
         rx_buf[i] = (uint8_t)i2c->RXDR;
     }
 
-    start_tick = (uint16_t)TIM16->CNT;                      // Reset Start Tick counter
+    start_tick = (uint16_t)TIM16->CNT; // Reset Start Tick counter
     while (!(i2c->ISR & (1 << 5))) {
         // Wait for communication with peripheral to be complete
         if (check_timeout(start_tick, timeout_ms)) return false;
     }
-    i2c->ICR |= (1 << 5);                                   // Write 1 to clear stop flag
+    i2c->ICR |= (1 << 5); // Write 1 to clear stop flag
 
     return true;
 }
